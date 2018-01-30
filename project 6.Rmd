@@ -1,0 +1,133 @@
+---
+title: "Test a Perceptual Phenomenon"
+author: "Lu"
+date: "January 24, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Background Information
+This is a statistical test of a perceptual Phenomenon: a Stroop task. In a 
+Stroop task, participants are presented with a list of words, with each word 
+displayed in a color of ink. The participant's task is to say out loud the color
+of the ink in which the word is printed. The task has two conditions: a 
+congruent words condition, and an incongruent words condition. In the congruent
+words condition, the words being displayed are color words whose names match the
+colors in which they are printed. In the incongruent words condition, the words 
+displayed are color words whose names do not match the colors in which they are
+printed. In each case, we measure the time it takes to name the ink colors in
+equally-sized lists. Each participant will go through and record a time from 
+each condition.
+
+```{r cars}
+library(ggplot2)
+data <- read.csv("stroopdata.csv")
+```
+
+## What is independent variable? What is dependent variable?
+
+The independent variable is congruent words condition and incongruent words 
+condition.
+
+The dependent variable is the time it takes to name the colors.
+
+## What is an appropriate set of hypotheses for this task? What kind of statistiacal test do you expect to perform?\
+
+Hypotheses test:
+
+1. The null hypothesis: the time that take to name the colors in equally-sized 
+lists with congruent words condition and incongruent words condition are the 
+same.
+H0: mu_diff = 0 (The difference between group population means is 0)
+
+2. The alternative hypothesis: the time that take to name the colors in 
+equally-sized lists with congruent words condition and incongruent words 
+condition are not the same.
+H1: mu_diff != 0 (The difference between group population means is not 0)
+
+The kind of statistical test:
+I will perform 2 tailed z-test for this problem, since we don't know how would 
+the whole population perform.
+
+## Some descriptive statistics
+
+```{r descriptive statistics}
+str(data)
+summary(data)
+sd(data$Congruent)
+sd(data$Incongruent)
+```
+The dataset provides us with 24 observations of both congruent and incongruent 
+words conditions.
+For congruent words condition: the mean is 14.05 and the standard deviation is 
+3.56.
+For incongruent words condition: the mean is 22.02 and the standard deviation is
+4.80.
+
+## Some visualizations that show the distribution of the sample data
+
+```{r visualization}
+ggplot() +
+  geom_point(data = data, aes(x = Congruent, y = Incongruent), color = "red") +
+  geom_abline(linetype = 2, color = "blue") +
+  xlim(5, 40) +
+  ylim(5, 40) +
+  theme(aspect.ratio = 1)
+```
+
+As shown in the plot, each red dot represent an observation: the x value is its 
+congruent words condition time, and the y value is its incongruent words 
+condition time. The dashed blue line represents y = x. It is obvious that 
+incongruent words condition takes longer time to finish. Does this caused by 
+random samples?
+
+## Statistical test
+
+Since the test used paired data, we will focus on the differences between the 
+two groups:
+
+```{r diff}
+data$diff <- data$Congruent - data$Incongruent
+```
+
+```{r t-test}
+sd <- sd(data$diff)
+sd
+mean <- mean(data$diff)
+mean
+sem <- sd / sqrt(24)
+t <- mean / sem
+t
+```
+
+As shown above, the differences have standard deviation of 4.86, average of 
+-7.96, and a t-stat of -8.02.
+
+On the other hand, the t-critical for 2 tailed test with significance level at 
+0.05: -2.07, 2.07.
+
+The t-stat is in the left critical region, hence we reject the null hypothesis, 
+which meets my expectation.
+
+Also, with the help of online calculator, the p value is less than .01%, which 
+means the difference is considered to be extremely statistically significant.
+
+```{r CI}
+CI.left <- mean - 2.07 * sem
+CI.right <- mean + 2.07 * sem
+CI.left
+CI.right
+```
+
+The confidence interval is (-10.02, -5.91), which means we have 95% confidence 
+to believe the congruent test will take less time within the range than the 
+incongruent test.
+
+## What do you think is responsible for the effects observed?
+
+I believe people's mind is familiar with word. Once the word's meaning of color 
+is different from the color of the word, there are some conflicts in our mind 
+and make it confused, hence taking longer time to finish the test.
