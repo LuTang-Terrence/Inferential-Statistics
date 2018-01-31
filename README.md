@@ -8,4 +8,4 @@ This project is focused on statistics, including designing an experiment and tes
 3. Set up a hypothesis test, make inferences from a sample, and draw conclusions based on the results
 
 # Files
-You can read the HTML [report](https://cdn.rawgit.com/LuTang-Terrence/Inferential-Statistics/a7b54544/project_6.html).
+The project is written in R. You can read the HTML [report](https://cdn.rawgit.com/LuTang-Terrence/Inferential-Statistics/a7b54544/project_6.html).
